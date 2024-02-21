@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 // import Clarifai from 'clarifai';
+import ParticlesBg from 'particles-bg';
 import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
@@ -83,6 +84,7 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({imageUrl: this.state.input});
+    console.log(returnClarifaiRequestOptions(this.state.input));
     // app.models
     //   .predict(
     //     Clarifai.FACE_DETECT_MODEL,
@@ -96,6 +98,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <ParticlesBg type="cobweb" bg={true} />
         <Navigation />
         <Logo />
         <Rank />
