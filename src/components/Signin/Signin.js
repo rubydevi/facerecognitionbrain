@@ -1,42 +1,86 @@
 import React from 'react';
 
-const Signin = ({ onRouteChange }) => (
-    <div>
-      <div className="sans-serif w-90 white mw6 center relative cover bg-top mt2">
-        <div id="overlay" className="absolute absolute--fill bg-navy o-70 z-unset"></div>
 
-        <div className="relative pa4 pa5-m">
-          <h1 className="serif tracked ma0 mb4 pv3">Sign In</h1>
-          <form action="" id="login" className="">
-            <div className="mb3">
-              <label for="username" className="db f6 white-80 ttu ph2 mb2">Username</label>
+class Signin extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      signInEmail: '',
+      signInPassword: ''
+    }
+  }
+
+  onEmailChange = (event) => {
+    this.setState({signInEmail: event.target.value})
+  }
+
+  onPasswordChange = (event) => {
+    this.setState({signInPassword: event.target.value})
+  }
+
+  onSubmitSignIn = () => {
+    fetch('http://localhost:3000/signin', {
+      method: 'post',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        email: this.state.signInEmail,
+        password: this.state.signInPassword
+      })
+    })
+      .then(response => response.json())
+      .then(user => {
+        if (user.id) {
+          this.props.loadUser(user)
+          this.props.onRouteChange('home');
+        }
+      })
+  }
+
+  render() {
+    const { onRouteChange } = this.props;
+    return (
+      <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center">
+        <main className="pa4 black-80">
+          <div className="measure">
+            <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
+              <legend className="f1 fw6 ph0 mh0">Sign In</legend>
+              <div className="mt3">
+                <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
+                <input
+                  className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+                  type="email"
+                  name="email-address"
+                  id="email-address"
+                  onChange={this.onEmailChange}
+                />
+              </div>
+              <div className="mv3">
+                <label className="db fw6 lh-copy f6" htmlFor="password">Password</label>
+                <input
+                  className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
+                  type="password"
+                  name="password"
+                  id="password"
+                  onChange={this.onPasswordChange}
+                />
+              </div>
+            </fieldset>
+            <div className="">
               <input
-                type="text"
-                name="username"
-                className="input-reset db w-100 mw-100 white b pv2 ph3 bg-white-30 hover-bg-white-70 hover-gray outline-0 bn br-pill"
+                onClick={this.onSubmitSignIn}
+                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
+                type="submit"
+                value="Sign in"
               />
             </div>
-            <div className="mb4">
-              <label for="password" className="db f6 white-80 ttu ph2 mb2">Password</label>
-              <input
-                type="password"
-                name="password"
-                className="input-reset db w-100 mw-100 white b pv2 ph3 bg-white-30 hover-bg-white-70 hover-gray outline-0 bn br-pill"
-              />
+            <div className="lh-copy mt3">
+              <p  onClick={() => onRouteChange('register')} className="f6 link dim black db pointer">Register</p>
             </div>
-            <div>
-              <button
-                onClick={() => onRouteChange('home')}
-                className="input-reset db w-100 light-gray f6 b ttu tracked pv3 ph3 pointer bg-dark-blue hover-bg-blue bn br-pill">Sign In</button>
-            </div>
-          </form>
-          
-          <div className="tc b f6 mt4 o-70 glow pa2 i">
-            New Member? <p onClick={() => onRouteChange('register')} className="white" href="#">Register</p>
           </div>
-        </div>
-      </div>
-    </div>
-  );
+        </main>
+      </article>
+    );
+  }
+}
 
 export default Signin;
